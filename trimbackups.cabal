@@ -1,0 +1,17 @@
+name:                trimbackups
+version:             0.1.0.0
+synopsis:            Prune backup files in the spirit of Apple's Time Machine
+description:         Prune backup files in the spirit of Apple's Time Machine
+homepage:            https://github.com/mjhoy/trimbackups
+license:             GPL-2
+license-file:        LICENSE
+author:              Michael Hoy
+maintainer:          mjh@mjhoy.com
+category:            System
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable trimbackups
+  main-is:             Main.hs
+  build-depends:       base >=4.8 && <4.9
+  default-language:    Haskell2010
