@@ -1,18 +1,44 @@
 trimbackups -- Prune backup files in the spirit of Apple's Time Machine.
 
+SYNOPSIS
+    trimbackups [ options ] <path>
 
-USAGE
+DESCRIPTION
+    trimbackups examines all files under <path> and, based on file
+    modification time and rules about how many backups to keep,
+    deletes some subset.
+
+    The rules are:
+
+      Now to 24 hours ago -> keep all files in this timeframe.
+
+      24 hours to 2 weeks -> keep one file per 6 hours.
+
+      2 weeks to 2 months -> keep one file per 24 hours.
+
+      Past 2 months -> keep one file per week.
+
+OPTIONS
+    -h,--help                Show help text
+    -y                       Delete files without confirmation
+    --dry-run                Print a summary of what would be deleted
+    --report                 Print a summary
+
+EXAMPLES
       $ trimbackups /backups
 
-    The user is prompted whether to delete a set of files under /backups
-    that fulfill the trim criteria. By default, looking at the file
-    modification time, these are files that represent more than one file
-    per (a) hour, for the last 24 hours; (b) day, for the last month;
-    (c) week; for anything before the last month.
+    If any files exist under /backups that should be deleted following
+    the trim criteria (above), the user is asked whether to delete
+    them.
 
       $ trimbackups -y /backups
 
     Same as above, but confirmation is not requested.
+
+      $ trimbackups --report /backups
+
+    Same as above, but a list of the files deleted and disk space
+    freed is printed.
 
       $ trimbackups --dry-run /backups
 
