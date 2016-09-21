@@ -38,13 +38,13 @@ foldFn (prevTime , now, acc) cur = (prevTime', now, acc')
       Just prevTimeJ
 
           -- after 2 months, weekly backups.
-          | scope > (2 * month) -> diff > week
+          | scope > (2 * month) -> diff > pad week
 
           -- after 2 weeks, daily backups.
-          | scope > (2 * week) -> diff > day
+          | scope > (2 * week) -> diff > pad day
 
           -- after a day, 6-hour backups.
-          | scope > day -> diff > (6 * hour)
+          | scope > day -> diff > pad (6 * hour)
 
           -- otherwise, keep everything.
           | otherwise -> True
@@ -55,6 +55,7 @@ foldFn (prevTime , now, acc) cur = (prevTime', now, acc')
               day = hour * 24
               week = day * 7
               month = day * 30
+              pad t = t - (60 * 10) -- 10 minute leeway
 
     (prevTime', acc') = if keep then (Just curTime, acc) else (prevTime, cur : acc)
 
