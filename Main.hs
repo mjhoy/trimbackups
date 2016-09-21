@@ -11,9 +11,10 @@ import Data.List
 
 import Trimbackups.Trimmer
 
-data Opts = Opts { optsPath :: String
+data Opts = Opts { optsPath    :: String
                  , optsConfirm :: Bool
-                 , optsDryRun  :: Bool }
+                 , optsDryRun  :: Bool
+                 , optsReport  :: Bool }
             deriving (Show)
 
 opts :: Parser Opts
@@ -27,6 +28,9 @@ opts = Opts
   <*> (switch
        (long "dry-run"
      <> help "Print a summary of what would be deleted"))
+  <*> (switch
+       (long "report"
+     <> help "Print a summary"))
 
 prog :: ParserInfo Opts
 prog = info (helper <*> opts)
@@ -49,7 +53,7 @@ humanSize size = humanSize' (realToFrac size) ["Bytes", "Kb", "Mb", "Gb", "Tb"]
 
 main :: IO ()
 main = do
-  (Opts path confirm dry) <- execParser prog
+  (Opts path confirm dry report) <- execParser prog
 
   exists <- doesDirectoryExist path
 
@@ -69,8 +73,7 @@ main = do
       forM_ trim $ \(totrim, _) -> do
         putStrLn totrim
 
-      let sumSize = foldl' (\size (_, status) -> size + fileSize status) 0 trim
-      putStrLn $ "\ntotal space to remove: " ++ (humanSize sumSize)
+      putStrLn $ "\ntotal space to remove: " ++ (humanSize (sumSize trim))
 
     False -> do
 
@@ -88,3 +91,13 @@ main = do
 
       forM_ trim $ \(totrim, _) -> do
         removeFile totrim
+
+      when (report && (length trim > 0)) $ do
+        putStrLn "(trimbackups) the following files were removed:\n"
+        hFlush stdout
+        forM_ trim $ putStrLn . fst
+        putStrLn $ "\ntotal space removed: " ++ (humanSize (sumSize trim))
+
+  where
+
+    sumSize = foldl' (\size (_, status) -> size + fileSize status) 0
