@@ -87,4 +87,4 @@ main = do
           exitErr "User aborted"
 
       forM_ trim $ \(totrim, _) -> do
-        putStrLn $ "rm " ++ totrim
+        removeFile totrim
