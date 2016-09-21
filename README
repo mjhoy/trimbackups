@@ -1,4 +1,4 @@
-trimbackups -- Prune backup files in the spirit of Apple's Time Machine.
+trimbackups -- Prune backup files à la Time Machine.
 
 SYNOPSIS
     trimbackups [ options ] <path>
@@ -23,24 +23,3 @@ OPTIONS
     -y                       Delete files without confirmation
     --dry-run                Print a summary of what would be deleted
     --report                 Print a summary
-
-EXAMPLES
-      $ trimbackups /backups
-
-    If any files exist under /backups that should be deleted following
-    the trim criteria (above), the user is asked whether to delete
-    them.
-
-      $ trimbackups -y /backups
-
-    Same as above, but confirmation is not requested.
-
-      $ trimbackups --report /backups
-
-    Same as above, but a list of the files deleted and disk space
-    freed is printed.
-
-      $ trimbackups --dry-run /backups
-
-    A list of files that would be deleted are printed, plus a summary of
-    the disk space that would be freed.
